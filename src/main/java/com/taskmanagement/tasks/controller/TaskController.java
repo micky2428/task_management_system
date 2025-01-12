@@ -47,61 +47,91 @@ public class TaskController {
 }
 
 
-// package com.taskmanagement.tasks.controller;
+package com.taskmanagement.tasks.controller;
 
 
-// import jakarta.validation.Valid;
-// import taskmanagementsystem.dto.ApiResponse;
-// import taskmanagementsystem.model.Task;
-// import taskmanagementsystem.service.TaskService;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.*;
-// import java.util.List;
+import jakarta.validation.Valid;
+import com.taskmanagement.dto.ApiResponse;
+import com.taskmanagement.model.Task;
+import com.taskmanagement.service.TaskService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
 
-// @RestController
-// @RequestMapping("/api/v1/tasks")
-// public class TaskController {
+import java.util.List;
 
-//     private final TaskService service;
+@RestController
+@RequestMapping("/api/v1/tasks")
+@Validated  // 將驗證應用到整個控制器
+public class TaskController {
 
-//     public TaskController(TaskService service) {
-//         this.service = service;
-//     }
+    private final TaskService service;
 
-//     @PostMapping("/user/{id}")
-//     public ResponseEntity<ApiResponse> createTask(@Valid @RequestBody Task task, @PathVariable("id") Long userId) {
-//         return new ResponseEntity<>(service.createTask(task, userId), HttpStatus.CREATED);
-//     }
+    public TaskController(TaskService service) {
+        this.service = service;
+    }
+    
+    // 建立任務
+    @PostMapping("/user/{id}")
+    public ResponseEntity<ApiResponse> createTask(@Valid @RequestBody Task task, @PathVariable("id") Long userId) {
+        
+        ApiResponse response = service.createTask(task, userId);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
-//     @GetMapping("/{taskId}")
-//     public ResponseEntity<ApiResponse> getTaskById(@PathVariable Integer taskId) {
-//         return new ResponseEntity<>(service.getTaskById(taskId), HttpStatus.OK);
-//     }
+    // 查詢任務
+    @GetMapping("/{taskId}")
+    public ResponseEntity<ApiResponse> getTaskById(@PathVariable Integer taskId) {
 
-//     @GetMapping("/user/{id}")
-//     public ResponseEntity<List<Task>> getAllTasks(@PathVariable("id") Long userId) {
-//         return new ResponseEntity<>(service.getAllTasks(userId), HttpStatus.OK);
-//     }
+        ApiResponse response = service.getTaskById(taskId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
-//     @PutMapping("/{id}")
-//     public ResponseEntity<ApiResponse> updateTask(@PathVariable Integer id, @Valid @RequestBody Task task) {
-//         return new ResponseEntity<>(service.updateTask(task, id), HttpStatus.OK);
-//     }
+    }
 
-//     @DeleteMapping("/{id}")
-//     public ResponseEntity<String> deleteTaskById(@PathVariable Integer id) {
-//         service.deleteTask(id);
-//         return ResponseEntity.ok("Task deleted successfully");
-//     }
+    // 查詢特定用戶的所有任務
+    @GetMapping("/user/{id}")
+    public ResponseEntity<ApiResponse> getAllTasks(@PathVariable("id") Long userId) {
 
-//     @PatchMapping("/{id}/task-done")
-//     public ResponseEntity<ApiResponse> completedTodo(@PathVariable Integer id) {
-//         return  ResponseEntity.ok(service.doneTask(id));
-//     }
+        List<Task> tasks = service.getAllTasks(userId);
+        ApiResponse response = new ApiResponse("Tasks retrieved successfully", tasks);
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
-//     @PatchMapping("/{id}/task-pending")
-//     public ResponseEntity<ApiResponse> inCompletedTodo(@PathVariable Integer id){
-//         return ResponseEntity.ok(service.pendingTask(id));
-//     }
-// }
+
+    }
+
+    // 更新任務
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> updateTask(@PathVariable Integer id, @Valid @RequestBody Task task) {
+ 
+        ApiResponse response = service.updateTask(task, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // 刪除任務
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTaskById(@PathVariable Long id) {
+  
+        service.deleteTask(id);
+        return ResponseEntity.noContent().build(); // 返回 204 No Content 狀態碼
+
+
+    }
+
+    // 完成任務
+    @PatchMapping("/{id}/task-done")
+    public ResponseEntity<ApiResponse> completedTodo(@PathVariable Long id) {
+
+        ApiResponse response = service.doneTask(id);
+        return ResponseEntity.ok(response);
+    }
+
+    // 任務設為未完成
+    @PatchMapping("/{id}/task-pending")
+    public ResponseEntity<ApiResponse> inCompletedTodo(@PathVariable Long id){
+
+        ApiResponse response = service.pendingTask(id);
+        return ResponseEntity.ok(response);
+
+    }
+}
