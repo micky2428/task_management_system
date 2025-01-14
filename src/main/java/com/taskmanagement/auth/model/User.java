@@ -1,4 +1,4 @@
-package taskmanagement.auth.model;
+package com.taskmanagement.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -32,6 +32,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private String password;
 
@@ -48,8 +51,9 @@ public class User {
     private List<Task> taskList;
 
     //Constructor
-    public User(String username, String password, String role) {
+    public User(String username, String email, String password, String role) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -63,3 +67,5 @@ public class User {
         return taskList;
     }
 }
+
+
