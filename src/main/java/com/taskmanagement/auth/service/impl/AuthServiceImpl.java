@@ -1,20 +1,18 @@
 package com.taskmanagement.auth.service.impl;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.taskmanagement.auth.model.User;
+import com.taskmanagement.auth.security.AuthResponse;
+import com.taskmanagement.auth.service.AuthService;
 import com.taskmanagement.dto.LoginRequest;
 import com.taskmanagement.dto.RegisterRequest;
 import com.taskmanagement.exception.ApiException;
-import com.taskmanagement.auth.model.User;
 import com.taskmanagement.repository.UserRepository;
-import com.taskmanagement.auth.security.AuthResponse;
-import com.taskmanagement.auth.service.AuthService;
-
-
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -38,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
         return createAuthResponse(savedUser);
     }
 
+    //和register都統一返回 AuthResponse
     @Override
     public AuthResponse login(LoginRequest login) {
         User user = userRepository.findByUsernameOrEmail(login.getUsername(), login.getUsername())
@@ -45,13 +44,9 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
 
         return createAuthResponse(user);
+
     }
 
-    // @Override
-    // public Optional<User> login(LoginRequest login) {
-    //     return Optional.ofNullable(userRepository.findByUsername(login.getUsername()))
-    //         .filter(user -> passwordEncoder.matches(login.getPassword(), user.getPassword()));
-    // }
 
     // 用於封裝檢查用戶是否已存在的邏輯
     private void validateUserExists(RegisterRequest register) {

@@ -2,16 +2,23 @@ package com.taskmanagement.exception;
 
 import java.time.LocalDateTime;
 
-@Getter
-@AllArgsConstructor
-public class ErrorDetails {
-    //異常發生的時間戳
-    private final LocalDateTime timeStamp;
-    private final String message;
-    private final String details;
+import org.springframework.http.HttpStatus;
 
-    public static ErrorDetails of(String message, String details) {
-        return new ErrorDetails(LocalDateTime.now(), message, details);
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor //有這個就不用this...那段
+@NoArgsConstructor  
+public class ErrorDetails {
+    private int status;
+    private String message;
+    private LocalDateTime timestamp;
+
+    // 使用 @AllArgsConstructor 和 @NoArgsConstructor 生成合适的构造函数
+    public static ErrorDetails of(String message, HttpStatus status) {
+        return new ErrorDetails(status.value(), message, LocalDateTime.now());
     }
 }
 

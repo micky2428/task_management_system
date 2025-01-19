@@ -1,26 +1,35 @@
 package com.taskmanagement.exception;
 
 
-import org.hibernate.exception.ConstraintViolationException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.security.access.AccessDeniedException;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 //捕獲全局異常
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ResponseEntity<ErrorDetails> buildResponse(Exception exception, HttpStatus status, WebRequest request) {
-        return buildResponse(exception.getMessage(), status, request);
+    private ResponseEntity<ErrorDetails> buildResponse(Object exceptionOrMessage, HttpStatus status, WebRequest request) {
+        String message;
+        if (exceptionOrMessage instanceof Exception) {
+            // 如果是 Exception 类型，提取其消息
+            message = ((Exception) exceptionOrMessage).getMessage();
+        } else {
+            // 如果是 String 类型，直接使用它作为错误消息
+            message = exceptionOrMessage.toString();
+        }
+    
+        // 创建 ErrorDetails 实例
+        ErrorDetails errorDetails = new ErrorDetails(status.value(), message, LocalDateTime.now());
+        return new ResponseEntity<>(errorDetails, status);
     }
 
     //處理資源未找到的情況(404)
