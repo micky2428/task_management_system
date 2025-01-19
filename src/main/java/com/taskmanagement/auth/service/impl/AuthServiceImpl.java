@@ -11,6 +11,9 @@ import com.taskmanagement.repository.UserRepository;
 import com.taskmanagement.auth.security.AuthResponse;
 import com.taskmanagement.auth.service.AuthService;
 
+
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse register(Register register) {
+    public AuthResponse register(RegisterRequest register) {
         // 簡化重複的存在檢查邏輯
         validateUserExists(register);
 
@@ -36,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse login(Login login) {
+    public AuthResponse login(LoginRequest login) {
         User user = userRepository.findByUsernameOrEmail(login.getUsername(), login.getUsername())
                 .filter(u -> passwordEncoder.matches(login.getPassword(), u.getPassword()))
                 .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Invalid username or password"));
@@ -44,8 +47,14 @@ public class AuthServiceImpl implements AuthService {
         return createAuthResponse(user);
     }
 
+    // @Override
+    // public Optional<User> login(LoginRequest login) {
+    //     return Optional.ofNullable(userRepository.findByUsername(login.getUsername()))
+    //         .filter(user -> passwordEncoder.matches(login.getPassword(), user.getPassword()));
+    // }
+
     // 用於封裝檢查用戶是否已存在的邏輯
-    private void validateUserExists(Register register) {
+    private void validateUserExists(RegisterRequest register) {
         if (userRepository.existsByEmail(register.getEmail())) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Email has already been taken.");
         }
@@ -56,11 +65,11 @@ public class AuthServiceImpl implements AuthService {
 
     // 用於生成 AuthResponse 的統一方法
     private AuthResponse createAuthResponse(User user) {
-        return new AuthResponse(user.getId(), user.getUsername(), user.getRole());
+        return new AuthResponse(user.getId(), user.getUsername(), List.of(user.getRole()));
     }
 
     // 用於建構 User 物件，並加密密碼
-    private User buildUser(Register register) {
+    private User buildUser(RegisterRequest register) {
         User user = new User();
         user.setEmail(register.getEmail());
         user.setUsername(register.getUsername());

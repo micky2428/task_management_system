@@ -1,15 +1,17 @@
 package com.taskmanagement.auth.model;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import com.taskmanagement.tasks.model.Task;
 
-
-import java.util.ArrayList;
-import java.util.List;
 
 //將 User 類別標記為一個 JPA 實體類，它將對應到資料庫中的表
 @Entity
@@ -49,6 +51,8 @@ public class User {
     //防止在返回給前端的 JSON 內容中，taskList 屬性會被不小心序列化，從而避免無窮的遞歸（例如 User 有 taskList，每個 Task 又指向 User
     @JsonIgnore
     private List<Task> taskList;
+    
+
 
     //Constructor
     public User(String username, String email, String password, String role) {

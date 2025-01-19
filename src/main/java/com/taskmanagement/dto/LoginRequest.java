@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+//final:不可變的 DTO 提高了安全性
 public final class LoginRequest {
 
     @NotEmpty(message = "Username cannot be empty. Please provide a valid username.")

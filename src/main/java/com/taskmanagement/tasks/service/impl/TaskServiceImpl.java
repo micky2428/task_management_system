@@ -1,16 +1,17 @@
 package com.taskmanagement.tasks.service.impl;
 
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.taskmanagement.auth.model.User;
 import com.taskmanagement.dto.ApiResponse;
 import com.taskmanagement.exception.ResourceNotFoundException;
-import com.taskmanagement.tasks.model.Task;
-import com.taskmanagement.auth.model.User;
 import com.taskmanagement.repository.TaskRepository;
 import com.taskmanagement.repository.UserRepository;
-import org.springframework.stereotype.Service;
+import com.taskmanagement.tasks.model.Task;
 import com.taskmanagement.tasks.service.TaskService;
-
-import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -40,11 +41,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ApiResponse getAllTasks(Long userId) {
+    public List<Task> getAllTasks(Long userId) {
+        // 查詢 User 並處理錯誤
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with ID: " + userId + " not found"));
-        List<Task> taskList = taskRepository.findAllByUserId(user.getId());
-        return new ApiResponse("Tasks retrieved successfully", taskList);
+        // 查詢 User 的所有任務
+        return taskRepository.findAllByUser_Id(user.getId());
     }
 
     @Override
@@ -61,28 +63,46 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public ApiResponse deleteTask(Integer id) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task with ID: " + id + " not found"));
-        taskRepository.delete(task);
-        return new ApiResponse("Task deleted successfully", null); // Returning null as there's no task to return
+    public ApiResponse deleteTask(Long id) {
+        List<Task> tasks = taskRepository.findAllByUser_Id(id);  // 查找某個使用者的所有任務
+    
+        if (tasks.isEmpty()) {
+            throw new ResourceNotFoundException("Task with ID: " + id + " not found");
+        }
+    
+        Task taskToDelete = tasks.get(0);  // 假設刪除第一個找到的任務
+        taskRepository.delete(taskToDelete);  // 刪除該任務
+    
+        return new ApiResponse("Task deleted successfully", null);  // 返回成功訊息
     }
 
     @Override
-    public ApiResponse markTaskAsCompleted(Integer id) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task with ID: " + id + " not found"));
-        task.setCompleted(true);
-        Task updatedTask = taskRepository.save(task);
-        return new ApiResponse("Task marked as done", updatedTask);
+    public ApiResponse markTaskAsCompleted(Long id) {
+        List<Task> tasks = taskRepository.findAllByUser_Id(id);  // 查找某個使用者的所有任務
+    
+        if (tasks.isEmpty()) {
+            throw new ResourceNotFoundException("Task with ID: " + id + " not found");
+        }
+    
+        Task taskToUpdate = tasks.get(0);  // 假設更新第一個找到的任務
+        taskToUpdate.setCompleted(true);  // 設為完成
+        Task updatedTask = taskRepository.save(taskToUpdate);  // 保存更新
+    
+        return new ApiResponse("Task marked as done", updatedTask);  // 返回更新後的任務
     }
 
     @Override
-    public ApiResponse markTaskAsPending(Integer id) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task with ID: " + id + " not found"));
-        task.setCompleted(false);
-        Task updatedTask = taskRepository.save(task);
-        return new ApiResponse("Task marked as pending", updatedTask);
+    public ApiResponse markTaskAsPending(Long id) {
+        List<Task> tasks = taskRepository.findAllByUser_Id(id);  // 查找某個使用者的所有任務
+    
+        if (tasks.isEmpty()) {
+            throw new ResourceNotFoundException("Task with ID: " + id + " not found");
+        }
+    
+        Task taskToUpdate = tasks.get(0);  // 假設更新第一個找到的任務
+        taskToUpdate.setCompleted(false);  // 設為未完成
+        Task updatedTask = taskRepository.save(taskToUpdate);  // 保存更新
+    
+        return new ApiResponse("Task marked as pending", updatedTask);  // 返回更新後的任務
     }
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public final class ApiResponseDTO<T> {
+public final class ApiResponse<T> {
     
     private final String message;
     //使用泛型 T 來表示 data 的類型
