@@ -1,9 +1,11 @@
 import axios from "axios";
 import { getBasicAuth } from "./AuthApiService";
 
-const API_BASE_URL = 'http://localhost:5173/api/v1/tasks';
+//串接後端api (taskcontroller.java)
+const API_BASE_URL = 'http://localhost:8080/api/v1/tasks';
 
-//這段程式碼定義了一個 response interceptor，用來捕獲 API 請求的回應
+//這段程式碼定義了一個回應攔截器(response interceptor)，用來捕獲 API 請求的回應
+// 攔截器 (Interceptor) 是一種 中介層 (middleware)，它會在 HTTP 請求發送前 或 回應返回後，對請求或回應進行處理。
 axios.interceptors.response.use(
   response => response,
   error => {
@@ -49,14 +51,14 @@ export const deleteTask = (id) =>
       'Authorization': getBasicAuth()
     }
   });
-//標註任務為完成
+//標註任務狀態為完成
 export const markDone = (id) =>
   axios.patch(`${API_BASE_URL}/${id}/task-done`, null, {
     headers: {
       'Authorization': getBasicAuth()
     }
   });
-//標註任務為待處理
+//標註任務狀態為待處理
 export const markPending = (id) =>
   axios.patch(`${API_BASE_URL}/${id}/task-pending`, null, {
     headers: {

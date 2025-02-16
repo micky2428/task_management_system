@@ -6,7 +6,7 @@ import {
   retrieveAllTasks,
 } from "../../api/TaskApiService";
 import { Link, useNavigate } from "react-router-dom";
-import { FaTrash, FaPen, FaEye, FaCheck, FaTimes } from "react-icons/fa";
+import { FaPlus, FaTrash, FaPen, FaEye, FaCheck, FaTimes } from "react-icons/fa";
 import "../pages/tasks.css";
 
 const TaskHistory = ({ userId }) => {
@@ -69,9 +69,9 @@ const TaskHistory = ({ userId }) => {
           <div className="card shadow-lg">
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="m-0">Task History</h2>
+                <h2 className="m-0">歷史任務</h2>
                 <Link to="/add-task" className="btn btn-primary btn-sm">
-                  <i className="fas fa-plus me-2"></i> Add Task
+                  <FaPlus className="me-2" /> 新增
                 </Link>
               </div>
               {tasks.map(

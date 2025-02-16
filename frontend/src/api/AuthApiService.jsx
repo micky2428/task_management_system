@@ -1,29 +1,30 @@
 import axios from "axios";
 
-//之後所有 API 請求都會使用這個 authApiClient，不需要重複寫 baseURL
+//之後所有 API 請求都會使用這個 authApiClient，不需要重複寫 baseURL，以串聯後端
 const authApiClient = axios.create({
-  baseURL: 'http://localhost:5173/api/auth',
-  // baseURL: 'http://localhost:8080/api/auth',
+  baseURL: 'http://localhost:8080/api/auth',
+  withCredentials: true,  // 確保跨域請求可以攜帶 cookies 或 token
 });
 
-//用 POST /register 註冊使用者，user 物件會包含 使用者名稱、密碼、Email 等資訊
-// Combine username and password into a single object for loginApi
-const loginCredentials = (username, password) => ({ username, password });
 
+
+//用 POST 向 /register 註冊使用者(user)，包含使用者名稱、密碼、Email 等資訊
 export const registerApi = (user) => authApiClient.post('/register', user);
 
-//組合 username 和 password 成 loginCredentials 物件，並 POST /login 發送登入請求。
+//組合 username 和 password 成 loginCredentials 物件，並用POST向 /login 發送登入請求。
+const loginCredentials = (username, password) => ({ username, password });
+
 export const loginApi = (username, password) =>
   authApiClient.post('/login', loginCredentials(username, password));
 
-// 記錄已登入使用者
-//存入 sessionStorage，讓登入資訊在 瀏覽器關閉時清除
+// 記錄已登入的使用者
+//存入 sessionStorage，登入資訊會在瀏覽器關閉時清除
 export const saveLoggedUser = (userId, username, role) => {
   sessionStorage.setItem('activeUserId', userId);
   sessionStorage.setItem('authenticatedUser', username);
   sessionStorage.setItem('role', role);
 };
-//將 Basic Auth 存入 localStorage (登入狀態可跨瀏覽器重新整理保持)
+//將 Basic Auth 存入 localStorage (登入狀態可跨瀏覽器重新整理)
 export const storeBasicAuth = (basicAuth) => localStorage.setItem('auth', basicAuth);
 export const getBasicAuth = () => localStorage.getItem('auth');
 
@@ -42,5 +43,5 @@ export const logout = () => {
 };
 
 //檢查是否為管理員
-export const isAdminUser = () => sessionStorage.getItem('role') === 'ROLE_ADMIN'; // Strict comparison for role check
+export const isAdminUser = () => sessionStorage.getItem('role') === 'ROLE_ADMIN'; 
 

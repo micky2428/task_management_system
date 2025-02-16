@@ -1,5 +1,5 @@
 import React from 'react'
-// import logo from '../assets/react.svg'
+import logo from '/src/assets/react.svg'
 import { NavLink, useNavigate } from "react-router-dom"
 import { isUserLoggedIn, logout } from '../../api/AuthApiService'
 //
@@ -13,11 +13,10 @@ const HeaderComponent = () => {
   const isAuth = isUserLoggedIn();
   //1140211-test:(true顯示登出和歷史任務;false:創建帳號和登入)
   //const isAuth = false;
-  // 用來程式化跳轉頁面
+  // 跳轉頁面
   const navigate = useNavigate();
-
+  // 使用者登出
   function handleLogout() {
-    // 登出使用者
     logout();
     navigate("/login");
   }
@@ -30,15 +29,15 @@ const HeaderComponent = () => {
   }
 
   return (
-    // 建立導航列 (Navbar)，fixed-top 讓它固定在頁面頂端
+    // 建立導航列，並固定在頁面頂端(fixed-top)
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container">
         <NavLink className="navbar-brand" to="/">
-          {/* <img src={logo} alt="logo" width={30} height={30} /> */}
-          🔥 任務管理系統
+          <img src={logo} alt="logo" width={30} height={30} />
+          任務管理系統
         </NavLink>
         <button
-          // 在 小螢幕 (手機) 上，這顆按鈕可 展開 / 收合 選單
+          // 在小螢幕 (如手機) 上，可展開選單
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
@@ -60,7 +59,7 @@ const HeaderComponent = () => {
                   </NavLink>
                 ) : (
                   <NavLink className="nav-link" to="/history">
-                    📜 歷史任務
+                    📁 歷史任務
                   </NavLink>
                 )}
               </li>
@@ -69,7 +68,7 @@ const HeaderComponent = () => {
             {!isAuth && (
               <li className="nav-item">
                 <NavLink className="nav-link" to="/create-account">
-                  🆕 創建帳號
+                  🆕 建立帳號
                 </NavLink>
               </li>
             )}

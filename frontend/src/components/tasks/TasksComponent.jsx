@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { deleteTask, markDone, markPending, retrieveAllTasks } from "../../api/TaskApiService";
 import { Link, useNavigate } from "react-router-dom";
 //載入 FontAwesome 圖示
-// import { FaPlus, FaTrash, FaPen, FaEye } from "react-icons/fa";
-//顯示通知訊息 (如任務刪除成功)
+import { FaPlus, FaTrash, FaPen, FaEye } from "react-icons/fa";
+//顯示通知
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import "../css/tasks.css";
+import '../pages/tasks.css';
 //任務清單 (Task List)，讓使用者可以查看、標記完成/未完成、刪除、編輯任務，取得 Tasks 並顯示清單
 
 const TasksComponent = ({ userId }) => {
@@ -43,7 +43,7 @@ const TasksComponent = ({ userId }) => {
       });
   };
 
-  //標記任務為完成/未完成
+  //標記任務為完成或未完成
   const markTask = (id, isChecked) => {
     if (isChecked) {
       markDone(id)
@@ -72,7 +72,7 @@ const TasksComponent = ({ userId }) => {
   const viewTaskDetails = (task) => {
     navigate(`/task-details/${task.id}`, { state: task });
   };
-  //使用 Bootstrap 來美化 UI
+  //UI
   return (
     <div className="container py-5">
       <div className="row justify-content-center">
@@ -81,9 +81,9 @@ const TasksComponent = ({ userId }) => {
             <div className="card-body">
               {/* 任務列表 */}
               <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="m-0">Task List</h2>
+                <h2 className="m-0">📜任務清單</h2>
                 <Link to="/add-task" className="btn btn-primary btn-sm">
-                  <FaPlus className="me-2" /> Add Task
+                  <FaPlus className="me-2" /> 新增
                 </Link>
               </div>
               {/* 過濾 & 顯示未完成任務 */}

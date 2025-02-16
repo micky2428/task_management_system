@@ -62,11 +62,11 @@ const LoginComponent = () => {
       <Container>
         <Row className="align-items-center">
           <Col md={6} className="text-center">
-            <img src="/src/assets/loginPage.jpg" alt="Login Page" className="img-fluid" />
+            <img src="/src/assets/loginPage.png" alt="Login Page" className="img-fluid" style={{ maxWidth: '70%' }}/>
           </Col>
           <Col md={6}>
             <div className="login-form bg-light shadow-lg p-4">
-              <h2 className="mb-4 text-center">Login</h2>
+              <h2 className="mb-4 text-center">帳號登入</h2>
               <form onSubmit={handleLoginForm}>
                 <div className="mb-3">
                   <input
@@ -75,7 +75,7 @@ const LoginComponent = () => {
                     className={`form-control ${
                       errors.username ? "is-invalid" : ""
                     }`}
-                    placeholder="Username"
+                    placeholder="使用者帳號"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                   />
@@ -90,7 +90,7 @@ const LoginComponent = () => {
                     className={`form-control ${
                       errors.password ? "is-invalid" : ""
                     }`}
-                    placeholder="Password"
+                    placeholder="密碼"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                   />
@@ -100,7 +100,7 @@ const LoginComponent = () => {
                 </div>
                 <div className="text-center">
                   <button type="submit" className="btn btn-dark btn-block">
-                    Login
+                    登入
                   </button>
                 </div>
               </form>

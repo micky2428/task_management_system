@@ -3,16 +3,19 @@ import { Container, Row, Col } from "react-bootstrap";
 import { registerApi } from "../../api/AuthApiService";
 import { useNavigate } from "react-router-dom";
 import "../pages/tasks.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 //主要功能
-// 使用者輸入：表單包含 username、email 和 password 三個輸入欄位
+// 使用者輸入：包含 username、email 和 password 
 const CreateAccount = () => {
+  console.log("CreateAccount Component Loaded!");
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //用來在註冊成功後導向 /login 頁面
+  //註冊成功後導向 /login 頁面
   const navigate = useNavigate();
-  //用來存儲驗證錯誤訊息
+  //儲存驗證相關錯誤訊息
   const [errors, setErrors] = useState({
     username: "",
     email: "",
@@ -23,7 +26,7 @@ const CreateAccount = () => {
   function handleRegistrationForm(event) {
     // 阻止預設行為 (event.preventDefault()) 避免頁面重新整理
     event.preventDefault();
-    // 訊息
+    // 紀錄
     console.log("Submit button clicked");
 
     if (validateForm()) {
@@ -90,21 +93,22 @@ const CreateAccount = () => {
   }
 
   return (
-    //頁面 UI
+    //UI
     <div className="signup-page">
       <Container>
         <Row className="align-items-center">
           <Col md={6} className="text-center">
-            <img
-              src="/src/assets/loginPage.jpg"
-              alt="Login Page"
+           <img
+              src="/src/assets/createAccountPage.png"
+              alt="createAccountPage"
               className="img-fluid"
             />
           </Col>
           <Col md={6}>
             <div className="signup-form shadow-lg p-5 rounded-3">
-              <h2 className="mb-4 text-center">Create Account</h2>
+              <h2 className="mb-4 text-center">建立新帳號</h2>
               <form onSubmit={handleRegistrationForm}>
+                {/* 使用者名稱 */}
                 <div className="mb-3">
                   <input
                     type="text"
@@ -112,7 +116,7 @@ const CreateAccount = () => {
                     className={`form-control ${
                       errors.username ? "is-invalid" : ""
                     }`}
-                    placeholder="Username"
+                    placeholder="使用者名稱"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                   />
@@ -120,6 +124,7 @@ const CreateAccount = () => {
                     <div className="invalid-feedback">{errors.username}</div>
                   )}
                 </div>
+                {/* email */}
                 <div className="mb-3">
                   <input
                     type="text"
@@ -135,7 +140,7 @@ const CreateAccount = () => {
                     <div className="invalid-feedback">{errors.email}</div>
                   )}
                 </div>
-                {/* 註冊表單 UI */}
+                {/* 密碼 */}
                 <div className="mb-3">
                   <input
                     type="password"
@@ -143,7 +148,7 @@ const CreateAccount = () => {
                     className={`form-control ${
                       errors.password ? "is-invalid" : ""
                     }`}
-                    placeholder="Password"
+                    placeholder="密碼"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                   />
@@ -156,7 +161,7 @@ const CreateAccount = () => {
                     type="submit"
                     className="btn btn-dark btn-block"
                   >
-                    Create
+                    建立
                   </button>
                 </div>
               </form>

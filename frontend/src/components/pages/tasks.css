@@ -1,3 +1,4 @@
+/* 和任務相關頁面的css */
 .form-check-input:checked{
     background-color: #9400FF;
     border-color: #ffffff;
@@ -42,9 +43,33 @@
         border-right: none; /* Remove the border on smaller screens */
     }
 }
+/* 更新 */
+  .signup-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+  }
 
+  .signup-form {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+  }
 
-.signup-form {
+  .signup-form input[type="text"],
+  .signup-form input[type="password"] {
+    border-radius: 5px;
+  }
+
+  .signup-form button {
+    border-radius: 5px;
+  }
+/* .signup-form {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -89,7 +114,7 @@
   
   .signup-form button {
     border-radius: 0.25rem;
-  }
+  } */
   
   .invalid-feedback {
     display: block;
